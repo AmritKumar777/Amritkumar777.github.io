@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amrit Kumar | AI & ML Student Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        cyber: {
+                            bg: '#06060A',
+                            card: '#0D0E15',
+                            border: '#1A1C28',
+                            cyan: '#00F0FF',     /* Hot Neon Cyan */
+                            magenta: '#FF007F',  /* Electric Pink/Magenta */
+                            purple: '#9D4EDD',   /* Deep Cyber Purple */
+                            muted: '#62657A',
+                            text: '#E2E8F0'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #06060A;
+            color: #E2E8F0;
+        }
+
+        /* Hide browser pointer on screens supporting fine pointers */
+        @media (pointer: fine) {
+            body, a, button, input, select, textarea, label {
+                cursor: none !important;
+            }
+        }
+
+        /* Glowing Text & Components */
+        .text-glow-cyan {
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.6), 0 0 20px rgba(0, 240, 255, 0.2);
+        }
+        .border-glow-cyan:hover {
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.25);
+            border-color: #00F0FF;
+        }
+        .border-glow-magenta:hover {
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.25);
+            border-color: #FF007F;
+        }
+        .text-gradient-cyber {
+            background: linear-gradient(135deg, #00F0FF 0%, #FF007F 50%, #9D4EDD 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* White Ambient Backlight Core Card Architecture */
+        .ambient-white-glow-card {
+            position: relative;
+            background: rgba(13, 14, 21, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        /* Hidden background radiant halo layer */
+        .ambient-white-glow-card::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 140%;
+            height: 140%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.01) 50%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        /* Dynamic layered border gradient layer overlay */
+        .ambient-white-glow-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.02) 40%, rgba(255, 255, 255, 0.05) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            z-index: 2;
+            transition: background 0.4s ease;
+        }
+        /* Active hover trigger updates expanding border and lighting */
+        .ambient-white-glow-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 30px 2px rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        .ambient-white-glow-card:hover::before {
+            transform: translate(-50%, -50%) scale(1.1);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.02) 50%, transparent 70%);
+        }
+        .ambient-white-glow-card:hover::after {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.25) 100%);
+        }
+        
+        /* Custom Cursor Elements Base Structure */
+        .custom-cursor-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        .virtual-pointer {
+            position: fixed;
+            pointer-events: none;
+            display: none;
+        }
+
+        /* Solid Neon Yellow Tracking Dot (Circle line removed completely) */
+        #cursor-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #FFEB3B;                  /* Solid Yellow Dot */
+            border: none;                               /* Line completely removed */
+            border-radius: 50%;
+            box-shadow: 0 0 12px #FFEB3B, 0 0 22px #FFEB3B;
+            transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1), 
+                        height 0.22s cubic-bezier(0.16, 1, 0.3, 1), 
+                        background-color 0.2s ease, 
+                        box-shadow 0.2s ease;
+            transform: translate(-50%, -50%);
+            will-change: left, top;
+        }
+        
+        /* Layout Interaction State — Condenses into Concentrated Cyan Blue Engine Flare */
+        #cursor-dot.hovering {
+            width: 14px;
+            height: 14px;
+            background-color: #00F0FF;                  /* Glowing Hot Cyan Blue Core */
+            box-shadow: 0 0 18px #00F0FF, 0 0 35px #00F0FF;
+        }
+
+        /* Kinetic Flame Trail Particle Shells */
+        .cursor-flame-particle {
+            position: fixed;
+            pointer-events: none;
+            border-radius: 50%;
+            mix-blend-mode: screen;
+            animation: render-flame-trajectory 0.45s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            will-change: transform, opacity;
+        }
+        @keyframes render-flame-trajectory {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.95;
+            }
+            100% {
+                transform: translate(-50%, -150%) scale(0.1); /* Dissolves upwards naturally */
+                opacity: 0;
+            }
+        }
+
+        /* Global Click Ripple Component */
+        .click-ripple {
+            position: absolute;
+            border: 2px solid #00F0FF;
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            animation: expand-ripple 0.5s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+            z-index: 9998;
+        }
+        @keyframes expand-ripple {
+            0% { width: 0px; height: 0px; opacity: 1; border-color: #00F0FF; box-shadow: 0 0 8px #00F0FF; }
+            50% { border-color: #FF007F; box-shadow: 0 0 12px #FF007F; }
+            100% { width: 80px; height: 80px; opacity: 0; border-color: #9D4EDD; }
+        }
+
+        /* Smooth Animation Tweaks */
+        @keyframes subtle-wobble {
+            0%, 100% { border-radius: 20px 24px 20px 24px; transform: rotate(0deg); }
+            50% { border-radius: 24px 20px 26px 20px; transform: rotate(0.4deg); }
+        }
+        @keyframes line-pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+        .custom-wobble-card {
+            animation: subtle-wobble 5s ease-in-out infinite alternate;
+        }
+        .pulse-line {
+            animation: line-pulse 2s infinite ease-in-out;
+        }
+        .item-bounce:hover {
+            transform: scale(1.02) translateX(4px);
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        /* Disable custom mouse styling completely on touch devices */
+        @media (pointer: coarse) {
+            .custom-cursor-container, .virtual-pointer, .cursor-flame-particle {
+                display: none !important;
+            }
+            body, a, button, input {
+                cursor: auto !important;
+            }
+        }
+    </style>
+</head>
+<body class="font-sans selection:bg-cyber-magenta/30 selection:text-white overflow-x-hidden relative transition-opacity duration-500">
+
+    <!-- Active Custom Cursor Element Wrapper -->
+    <div class="custom-cursor-container">
+        <div id="cursor-dot" class="virtual-pointer"></div>
+    </div>
+
+    <!-- Screen Sandbox Dissolve Overlay Canvas Frame -->
+    <canvas id="doodle-dissolve-canvas" class="fixed top-0 left-0 w-full h-full z-[9990] pointer-events-none"></canvas>
+
+    <div id="main-global-wrapper" class="transition-all duration-1000 opacity-100 transform scale-100 origin-center">
+        <!-- Glowing Background Overlay Matrix -->
+        <div class="absolute top-0 left-0 w-full h-[600px] bg-[linear-gradient(to_right,#141622_1px,transparent_1px),linear-gradient(to_bottom,#141622_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20 pointer-events-none"></div>
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[500px] bg-gradient-to-b from-cyber-cyan/10 via-cyber-purple/5 to-transparent blur-[120px] pointer-events-none"></div>
+
+        <!-- Top Navigation Bar -->
+        <header class="sticky top-0 z-50 backdrop-blur-md bg-cyber-bg/80 border-b border-cyber-border transition-all duration-300">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                <a href="#" class="font-display font-bold text-lg tracking-wider text-white hover:text-cyber-cyan transition-colors flex items-center space-x-2">
+                    <span class="text-cyber-cyan font-mono">&lt;</span>
+                    <span>AMRIT KUMAR</span>
+                    <span class="text-cyber-magenta font-mono">/&gt;</span>
+                </a>
+                
+                <!-- Desktop Layout Navigation Links -->
+                <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-cyber-muted">
+                    <a href="#about" class="hover:text-cyber-cyan transition-colors">About Me</a>
+                    <a href="#skills" class="hover:text-cyber-cyan transition-colors">My Skills</a>
+                    <a href="#social-hub" class="hover:text-cyber-magenta transition-colors flex items-center space-x-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-cyber-magenta shadow-[0_0_8px_#FF007F] animate-pulse"></span>
+                        <span>Find Me Online</span>
+                    </a>
+                    <a href="#projects" class="hover:text-cyber-cyan transition-colors">Projects</a>
+                    <a href="#newsletter" class="px-4 py-2 rounded-xl bg-cyber-card hover:bg-cyber-bg text-cyber-cyan border border-cyber-cyan/30 hover:border-cyber-cyan transition-all shadow-[0_0_10px_rgba(0,240,255,0.1)]">Stay Updated</a>
+                </nav>
+
+                <!-- Mobile UI Trigger -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 text-cyber-muted hover:text-white focus:outline-none" aria-label="Toggle Navigation">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Mobile Dropdown Menu -->
+            <div id="mobile-menu" class="hidden md:hidden border-b border-cyber-border bg-cyber-bg/95 backdrop-blur-lg px-4 pt-2 pb-6 space-y-3">
+                <a href="#about" class="block py-2 text-cyber-text hover:text-cyber-cyan">About Me</a>
+                <a href="#skills" class="block py-2 text-cyber-text hover:text-cyber-cyan">My Skills</a>
+                <a href="#social-hub" class="block py-2 text-cyber-magenta font-medium">Find Me Online</a>
+                <a href="#projects" class="block py-2 text-cyber-text hover:text-cyber-cyan">Projects</a>
+                <a href="#newsletter" class="block text-center py-2.5 rounded-xl bg-cyber-magenta/10 border border-cyber-magenta/30 text-cyber-magenta">Stay Updated</a>
+            </div>
+        </header>
+
+        <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
+            <!-- About Me Section -->
+            <section id="about" class="py-16 md:py-24 grid md:grid-cols-12 gap-12 items-center">
+                <div class="md:col-span-7 space-y-6">
+                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyber-purple/10 border border-cyber-purple/30 text-xs font-medium text-cyber-purple tracking-wide">
+                        <span class="w-1.5 h-1.5 rounded-full bg-cyber-purple animate-ping"></span>
+                        <span>First Year Student • Batch 2026-2030</span>
+                    </div>
+                    
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight font-display leading-tight">
+                        Hi, I'm Amrit. <br>I study <span class="text-gradient-cyber text-glow-cyan">Artificial Intelligence and Machine Learning</span>
+                    </h1>
+                    
+                    <!-- Ambient Premium White Glow Layer Card -->
+                    <div class="ambient-white-glow-card p-6 relative z-10">
+                        <div class="relative z-10 space-y-2">
+                            <p class="text-sm sm:text-base text-white/90 leading-relaxed font-sans font-normal tracking-wide">
+                                I am currently in my 1st year of building strong engineering foundations at the <strong>Gulzar Group of Institutes in Khanna</strong>. Right now, I am completely focused on mastering the foundations of C and Python, sharpening my problem-solving habits, and building clean programming logic from scratch. I believe engineering is a sort of means to an end, but not an end itself.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Simple Status Tags -->
+                    <div class="flex flex-wrap gap-3 text-xs text-cyber-text/70">
+                        <div class="flex items-center space-x-1.5 bg-cyber-card px-3 py-1.5 rounded-lg border border-cyber-border">
+                            <span class="w-1.5 h-1.5 rounded-full bg-cyber-cyan"></span>
+                            <span>College: GGI, Khanna</span>
+                        </div>
+                        <div class="flex items-center space-x-1.5 bg-cyber-card px-3 py-1.5 rounded-lg border border-cyber-border">
+                            <span class="w-1.5 h-1.5 rounded-full bg-cyber-magenta"></span>
+                            <span>Building Coding Logic Everyday</span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
+                        <a href="#social-hub" class="px-6 py-3 rounded-xl bg-gradient-to-r from-cyber-cyan via-cyber-purple to-cyber-magenta text-cyber-bg font-bold text-center shadow-[0_0_20px_rgba(0,240,255,0.3)] hover:opacity-90 transition-all duration-300">
+                            Let's Connect Online
+                        </a>
+                        <a href="#skills" class="px-6 py-3 rounded-xl bg-cyber-card hover:bg-cyber-bg text-center font-medium border border-cyber-border text-cyber-text/80 hover:text-white transition-all">
+                            See What I'm Learning
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Weekly Schedule Routine Snapshot Card -->
+                <div class="md:col-span-5 relative flex justify-center">
+                    <div class="w-full max-w-sm rounded-3xl border border-cyber-border bg-cyber-card p-6 flex flex-col justify-between shadow-[0_0_30px_rgba(0,0,0,0.5)] transition-all duration-300 border-glow-cyan custom-wobble-card">
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between border-b border-cyber-border pb-3">
+                                <span class="text-xs font-bold text-cyber-cyan tracking-widest uppercase">My Weekly Schedule</span>
+                                <span class="text-xs px-2 py-0.5 rounded bg-cyber-magenta/10 text-cyber-magenta font-medium border border-cyber-magenta/20 animate-pulse">Active</span>
+                            </div>
+                            
+                            <!-- Weekly Schedule Grid Items -->
+                            <div class="space-y-3">
+                                <div class="p-3 rounded-xl bg-cyber-bg/60 border border-cyber-border hover:border-cyber-cyan/40 transition-all duration-300 item-bounce">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-xs font-bold text-white">Monday &amp; Wednesday</span>
+                                        <span class="text-[10px] text-cyber-cyan">C Classes</span>
+                                    </div>
+                                    <p class="text-[11px] text-cyber-muted">Working on loops, conditional code, and structural problem solving layouts in C.</p>
+                                </div>
+                                
+                                <div class="p-3 rounded-xl bg-cyber-bg/60 border border-cyber-border hover:border-cyber-magenta/40 transition-all duration-300 item-bounce">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-xs font-bold text-white">Tuesday &amp; Thursday</span>
+                                        <span class="text-[10px] text-cyber-magenta">Python Practice</span>
+                                    </div>
+                                    <p class="text-[11px] text-cyber-muted">Writing custom functions, working with basic arrays, and practicing scripting logic.</p>
+                                </div>
+                                
+                                <div class="p-3 rounded-xl bg-cyber-bg/60 border border-cyber-border hover:border-cyber-cyan/40 transition-all duration-300 item-bounce">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-xs font-bold text-white">Friday Lab Work</span>
+                                        <span class="text-[10px] text-cyber-cyan">Web Design</span>
+                                    </div>
+                                    <p class="text-[11px] text-cyber-muted">Testing responsive layouts locally with clean HTML structures and CSS code templates.</p>
+                                </div>
+                                
+                                <div class="p-3 rounded-xl bg-cyber-bg/60 border border-cyber-border hover:border-cyber-magenta/40 transition-all duration-300 item-bounce">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-xs font-bold text-white">Weekend Goals</span>
+                                        <span class="text-[10px] text-cyber-magenta">Logic Rebuilds</span>
+                                    </div>
+                                    <p class="text-[11px] text-cyber-muted">Breaking down logic algorithms manually on notebook pages to track calculations step-by-step.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between border-t border-cyber-border pt-4 mt-4">
+                            <div>
+                                <p class="text-[10px] text-cyber-muted uppercase tracking-wider">Current Focus</p>
+                                <p class="text-sm font-bold text-white text-glow-cyan">1st Year Foundations</p>
+                            </div>
+                            <div class="w-10 h-10 rounded-xl border border-cyber-cyan/20 bg-cyber-cyan/5 flex items-center justify-center text-cyber-cyan text-lg shadow-[0_0_10px_rgba(0,240,255,0.1)]">
+                                🌌
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Languages & Coding Skills Section -->
+            <section id="skills" class="py-16 border-t border-cyber-border">
+                <div class="max-w-2xl mb-12 space-y-2">
+                    <h2 class="text-2xl sm:text-3xl font-bold font-display tracking-wide flex items-center space-x-2 text-white">
+                        <span>Things I'm Practicing</span>
+                        <span class="text-cyber-cyan animate-pulse">■</span>
+                    </h2>
+                    <p class="text-cyber-muted text-sm sm:text-base">The tools and languages I open every single day to turn logical steps into real running programs.</p>
+                </div>
+
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Python Core Card -->
+                    <div class="bg-cyber-card p-6 rounded-2xl border border-cyber-border transition-all duration-300 border-glow-cyan flex flex-col justify-between group">
+                        <div class="space-y-3">
+                            <div class="text-2xl text-cyber-cyan group-hover:rotate-12 transition-transform duration-300">🐍</div>
+                            <h3 class="text-lg font-bold text-white tracking-wide">Python</h3>
+                            <p class="text-xs text-cyber-text/70 leading-relaxed">My primary language for automating routine scripts, solving logic puzzles, and preparing for future analytics work.</p>
+                        </div>
+                        <div class="pt-4 flex flex-wrap gap-1.5 text-[10px]">
+                            <span class="bg-cyber-bg text-cyber-cyan px-2 py-0.5 rounded border border-cyber-cyan/20 font-medium">Core Scripting</span>
+                        </div>
+                    </div>
+
+                    <!-- C Programming Card -->
+                    <div class="bg-cyber-card p-6 rounded-2xl border border-cyber-border transition-all duration-300 border-glow-magenta flex flex-col justify-between group">
+                        <div class="space-y-3">
+                            <div class="text-2xl text-cyber-magenta group-hover:rotate-12 transition-transform duration-300">⚙️</div>
+                            <h3 class="text-lg font-bold text-white tracking-wide">C Programming</h3>
+                            <p class="text-xs text-cyber-text/70 leading-relaxed">Studying this in my college classes to understand standard data memory flows, loops, and basic compiler structures.</p>
+                        </div>
+                        <div class="pt-4 flex flex-wrap gap-1.5 text-[10px]">
+                            <span class="bg-cyber-bg text-cyber-magenta px-2 py-0.5 rounded border border-cyber-magenta/20 font-medium">Memory Foundations</span>
+                        </div>
+                    </div>
+
+                    <!-- Data Structures & Algorithms Card -->
+                    <div class="bg-cyber-card p-6 rounded-2xl border border-cyber-border transition-all duration-300 border-glow-cyan flex flex-col justify-between group">
+                        <div class="space-y-3">
+                            <div class="text-2xl text-cyber-cyan group-hover:rotate-12 transition-transform duration-300">💡</div>
+                            <h3 class="text-lg font-bold text-white tracking-wide">Problem Solving</h3>
+                            <p class="text-xs text-cyber-text/70 leading-relaxed">Actively learning how to structure basic arrays, linear search paths, matrices, and list sorting methods step-by-step.</p>
+                        </div>
+                        <div class="pt-4 flex flex-wrap gap-1.5 text-[10px]">
+                            <span class="bg-cyber-bg text-cyber-cyan px-2 py-0.5 rounded border border-cyber-cyan/20 font-medium">Logic Building</span>
+                        </div>
+                    </div>
+
+                    <!-- Web Foundations Card -->
+                    <div class="bg-cyber-card p-6 rounded-2xl border border-cyber-border transition-all duration-300 border-glow-magenta flex flex-col justify-between group">
+                        <div class="space-y-3">
+                            <div class="text-2xl text-cyber-magenta group-hover:rotate-12 transition-transform duration-300">🌐</div>
+                            <h3 class="text-lg font-bold text-white tracking-wide">HTML &amp; CSS Layouts</h3>
+                            <p class="text-xs text-cyber-text/70 leading-relaxed">Building interactive, clean interfaces. I practice mapping custom layout grids to make sure things look perfect on mobile screens.</p>
+                        </div>
+                        <div class="pt-4 flex flex-wrap gap-1.5 text-[10px]">
+                            <span class="bg-cyber-bg text-cyber-magenta px-2 py-0.5 rounded border border-cyber-magenta/20 font-medium">Responsive Design</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Social Connections Directory -->
+            <section id="social-hub" class="py-16 border-t border-cyber-border">
+                <div class="max-w-2xl mb-12 space-y-2">
+                    <h2 class="text-2xl sm:text-3xl font-bold font-display tracking-wider flex items-center space-x-2 text-white">
+                        <span>Where to Find Me</span>
+                        <span class="text-cyber-magenta text-glow-magenta">⚡</span>
+                    </h2>
+                    <p class="text-cyber-muted text-sm sm:text-base">Let's stay connected! You can browse my code history or link up with me across these networks.</p>
+                </div>
+
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- GitHub Card -->
+                    <div class="bg-cyber-card p-6 rounded-2xl border border-cyber-border relative overflow-hidden group hover:border-cyber-cyan transition-all duration-300">
+                        <h4 class="text-xs uppercase tracking-widest text-cyber-cyan mb-1 font-medium">Code Vault</h4>
+                        <h3 class="text-xl font-bold text-white mb-2">GitHub Logs</h3>
+                        <p class="text-xs text-cyber-muted mb-4">Where I upload my daily lab code assignments, mini scripts, and simple webpage styles.</p>
+                        <a href="https://github.com/AmritKumar777" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-1.5 text-xs font-semibold text-cyber-cyan hover:text-white transition-colors">
+                            <span>See my repositories</span>
+                            <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                        </a>
+                    </div>
+
+                    <!-- LinkedIn Card -->
+                    <div class="bg-cyber-card p-6 rounded-2xl border border-cyber-border relative overflow-hidden group hover:border-cyber-magenta transition-all duration-300">
+                        <h4 class="text-xs uppercase tracking-widest text-cyber-magenta mb-1 font-medium">Professional Network</h4>
+                        <h3 class="text-xl font-bold text-white mb-2">LinkedIn Space</h3>
+                        <p class="text-xs text-cyber-muted mb-4">Connecting with university friends, institute seniors, and tech industry experts.</p>
+                        <a href="https://www.linkedin.com/in/amrit-k-083368286/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-1.5 text-xs font-semibold text-cyber-magenta hover:text-white transition-colors">
+                            <span>Let's stay in touch</span>
+                            <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                        </a>
+                    </div>
+
+                    <!-- LeetCode Card -->
+                    <div class="bg-cyber-card p-6 rounded-2xl border border-cyber-border relative overflow-hidden group hover:border-cyber-cyan transition-all duration-300">
+                        <h4 class="text-xs uppercase tracking-widest text-cyber-cyan mb-1 font-medium">Coding Practice</h4>
+                        <h3 class="text-xl font-bold text-white mb-2">LeetCode Hub</h3>
+                        <p class="text-xs text-cyber-muted mb-4">Practicing standard beginner loops and logical problems to keep my workflow sharp.</p>
+                        <a href="https://leetcode.com" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-1.5 text-xs font-semibold text-cyber-cyan hover:text-white transition-colors">
+                            <span>View my practice logs</span>
+                            <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                        </a>
+                    </div>
+
+                    <!-- Quick Copy Handle Card -->
+                    <div class="bg-cyber-card p-6 rounded-2xl border border-dashed border-cyber-border flex flex-col justify-between hover:border-cyber-magenta transition-all duration-300">
+                        <div>
+                            <h4 class="text-xs uppercase tracking-widest text-cyber-muted mb-1 font-medium">Quick Action</h4>
+                            <h3 class="text-xl font-bold text-white mb-1">Copy Username</h3>
+                            <p class="text-xs text-cyber-muted">Click the button below to grab my developer handle right into your clipboard.</p>
+                        </div>
+                        <div class="pt-4">
+                            <button onclick="copyTechHandle()" id="clip-btn" class="w-full py-2 bg-cyber-bg hover:bg-cyber-card text-cyber-cyan font-mono text-xs rounded-xl border border-cyber-border transition-all text-center">
+                                Copy: @AmritKumar777
+                            </button>
+                            <div id="clip-alert" class="hidden text-[10px] text-cyber-magenta font-mono mt-2 text-center animate-pulse">✔ COPIED TO YOUR CLIPBOARD!</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Project Placeholder Section -->
+            <section id="projects" class="py-16 border-t border-cyber-border">
+                <div class="max-w-2xl mb-10 space-y-2">
+                    <h2 class="text-2xl sm:text-3xl font-bold font-display tracking-wider text-white">My Future Projects</h2>
+                    <p class="text-cyber-muted text-sm sm:text-base">A dedicated workbench area for applications, custom code builds, and program tools I am planning.</p>
+                </div>
+
+                <!-- Beautiful Clean Placeholder Layout Graph Box -->
+                <div class="w-full border-2 border-dashed border-cyber-border rounded-3xl bg-cyber-card/40 p-8 sm:p-12 flex flex-col items-center justify-center text-center space-y-4 max-w-3xl mx-auto custom-wobble-card">
+                    <!-- Glowing Neural Vector SVG Doodle Layout -->
+                    <svg class="w-24 h-24 text-cyber-cyan mb-1" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.2">
+                        <circle cx="20" cy="50" r="4.5" fill="#00F0FF" class="animate-pulse"/>
+                        <circle cx="50" cy="20" r="4.5" fill="#FF007F"/>
+                        <circle cx="50" cy="50" r="4.5" fill="#00F0FF"/>
+                        <circle cx="50" cy="80" r="4.5" fill="#FF007F"/>
+                        <circle cx="80" cy="35" r="4.5" fill="#FF007F" class="animate-pulse"/>
+                        <circle cx="80" cy="65" r="4.5" fill="#00F0FF"/>
+                        
+                        <line x1="20" y1="50" x2="50" y2="20" stroke-dashedarray="3 3" stroke="#00F0FF" class="pulse-line"/>
+                        <line x1="20" y1="50" x2="50" y2="50" stroke="#FF007F"/>
+                        <line x1="20" y1="50" x2="50" y2="80" stroke-dashedarray="3 3" stroke="#00F0FF" class="pulse-line"/>
+                        <line x1="50" y1="20" x2="80" y2="35" stroke="#FF007F" stroke-width="1"/>
+                        <line x1="50" y1="50" x2="80" y2="35" stroke="#00F0FF" stroke-width="1"/>
+                        <line x1="50" y1="50" x2="80" y2="65" stroke="#FF007F" stroke-width="1"/>
+                        <line x1="50" y1="80" x2="80" y2="65" stroke="#00F0FF" stroke-width="1"/>
+                        
+                        <path d="M20,50 Q50,15 80,35" stroke="#FF007F" stroke-width="1.5" stroke-linecap="round" class="opacity-40 pulse-line"/>
+                        <path d="M20,50 Q50,85 80,65" stroke="#00F0FF" stroke-width="1.5" stroke-linecap="round" class="opacity-40 pulse-line"/>
+                    </svg>
+
+                    <div class="space-y-1">
+                        <h3 class="text-lg font-bold text-white tracking-wide">Preparing My First Live Builds</h3>
+                        <p class="text-sm text-cyber-text/70 max-w-md leading-relaxed mx-auto">
+                            Since I am currently a first-year student, I am investing my time into understanding core logical tracks, multi-dimensional array sets, and C loops. As soon as my first standalone code builds are fully tested, they will appear right here!
+                        </p>
+                    </div>
+                    <div class="inline-flex items-center space-x-2 text-[11px] text-cyber-cyan bg-cyber-cyan/10 border border-dashed border-cyber-cyan/30 px-3 py-1 rounded-full font-mono font-medium tracking-widest">
+                        <span class="w-1.5 h-1.5 rounded-full bg-cyber-cyan animate-ping"></span>
+                        <span>LEARNING &amp; PREPARING FIRST BUILDS</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Education History Timeline Section -->
+            <section class="py-16 border-t border-cyber-border">
+                <div class="max-w-2xl mx-auto space-y-10">
+                    <div class="text-center space-y-2">
+                        <h2 class="text-2xl sm:text-3xl font-bold font-display tracking-wider text-white">My Education Timeline</h2>
+                        <p class="text-cyber-muted text-sm">Tracking my ongoing educational path and steps in college.</p>
+                    </div>
+
+                    <div class="relative border-l-2 border-dashed border-cyber-border pl-6 ml-4">
+                        <div class="relative">
+                            <div class="absolute -left-[32px] top-1.5 w-4 h-4 rounded-full bg-cyber-cyan border-4 border-cyber-bg transition-transform duration-300 shadow-[0_0_10px_#00F0FF]"></div>
+                            <span class="text-xs font-bold text-cyber-cyan block mb-1">BATCH OF 2026 — 2030 (CURRENTLY IN 1ST YEAR)</span>
+                            <h3 class="text-lg font-bold text-white tracking-wide">B.Tech in Computer Science Engineering</h3>
+                            <p class="text-xs text-cyber-magenta font-semibold mb-2">Specializing in Artificial Intelligence and Machine Learning</p>
+                            <p class="text-sm text-cyber-text/70 leading-relaxed font-sans">
+                                Gulzar Group of Institutes, Khanna. Focusing heavily on coding arrays, procedural conditional paths, memory tracing structures, and daily logical sprints.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Newsletter Follow Journey Section -->
+            <section id="newsletter" class="py-16 border-t border-cyber-border mb-6">
+                <div class="bg-cyber-card p-6 sm:p-10 rounded-3xl border border-dashed border-cyber-border grid md:grid-cols-12 gap-8 items-center relative overflow-hidden group transition-all duration-300 hover:border-cyber-cyan/30">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-cyber-magenta/5 blur-[90px] pointer-events-none"></div>
+                    
+                    <div class="md:col-span-5 space-y-3">
+                        <h2 class="text-2xl sm:text-3xl font-bold font-display tracking-wider text-white flex items-center space-x-2">
+                            <span>Follow My Journey</span>
+                            <span class="text-xs text-cyber-cyan border border-dashed border-cyber-cyan/40 px-1.5 rounded uppercase">Updates</span>
+                        </h2>
+                        <p class="text-cyber-muted text-sm leading-relaxed font-sans">
+                            I write quick, casual updates about my code progress at GGI Khanna, interesting programming bugs I fix, or clean layout designs I test. Pop your email address below to join my list!
+                        </p>
+                    </div>
+
+                    <!-- Live Newsletter Input Form -->
+                    <div class="md:col-span-7">
+                        <form onsubmit="handleNewsletterSubscription(event)" class="space-y-3">
+                            <div class="grid sm:grid-cols-2 gap-3">
+                                <div class="space-y-1">
+                                    <label class="text-xs font-medium text-cyber-muted" for="sub-name">First Name</label>
+                                    <input type="text" id="sub-name" required class="w-full bg-cyber-bg border border-cyber-border rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyber-cyan transition-colors">
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-xs font-medium text-cyber-muted" for="sub-email">Email Address</label>
+                                    <input type="email" id="sub-email" required class="w-full bg-cyber-bg border border-cyber-border rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyber-cyan transition-colors">
+                                </div>
+                            </div>
+                            <button type="submit" class="w-full py-3 bg-gradient-to-r from-cyber-cyan to-cyber-magenta text-cyber-bg font-bold rounded-xl transition-all shadow-[0_0_15px_rgba(0,240,255,0.2)] hover:opacity-95 transform hover:-translate-y-0.5 duration-200">
+                                Keep Me Posted!
+                            </button>
+                        </form>
+                        
+                        <!-- Notification Banner Container -->
+                        <div id="sub-success-alert" class="hidden mt-3 p-3 bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan rounded-xl text-xs text-center font-medium animate-pulse shadow-[0_0_10px_rgba(0,240,255,0.1)]">
+                            ✔ Awesome! You're on the list. I'll pass along casual progress updates soon.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Creative Sandbox: Google Doodle Wind Dust Snap Dissolve Section -->
+            <section class="py-12 border-t border-cyber-border text-center relative overflow-hidden">
+                <div class="max-w-md mx-auto space-y-4 px-4">
+                    <p class="text-xs font-mono text-cyber-muted uppercase tracking-widest">Interactive Laboratory</p>
+                    <h3 class="text-lg font-bold font-display text-white">The Infinity Wind Snap</h3>
+                    
+                    <!-- Trigger Doodle Pixel Icon -->
+                    <button onclick="triggerWindSnapDissolve()" id="dissolve-trigger-btn" class="w-16 h-16 rounded-2xl bg-cyber-card border border-cyber-border hover:border-cyber-magenta text-2xl flex items-center justify-center mx-auto shadow-lg transition-all duration-300 hover:scale-110 active:scale-95 group relative" title="Trigger Wind Snap Disintegration">
+                        <span class="inline-block text-cyber-cyan group-hover:text-cyber-magenta transition-transform group-hover:rotate-45 duration-500">🫰</span>
+                        <span class="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-cyber-magenta animate-ping"></span>
+                    </button>
+                    
+                    <div id="dissolve-countdown-log" class="hidden text-xs font-mono text-cyber-magenta tracking-wider animate-pulse">
+                        [ CRITICAL WARNING: WIND DUST EXPULSION ENGAGED... 8s ]
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Base Layout Footer Frame -->
+        <footer class="border-t border-cyber-border bg-cyber-bg/40 py-8 text-center text-xs text-cyber-muted">
+            <p>&copy; 2026 Amrit Kumar. Student at Gulzar Group of Institutes, Khanna (2026-2030).</p>
+        </footer>
+    </div>
+
+    <!-- Interactive Custom Script Engines -->
+    <script>
+        // Mobile UI Screen Toggle Drawer Engine
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Global Touch/Click Glowing Ripple Generation Engine
+        document.addEventListener('click', (event) => {
+            const ripple = document.createElement('div');
+            ripple.classList.add('click-ripple');
+            ripple.style.left = `${event.pageX}px`;
+            ripple.style.top = `${event.pageY}px`;
+            
+            document.body.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 500);
+        });
+
+        // Custom Adaptive Flame Cursor Engine
+        const dotCursorNode = document.getElementById('cursor-dot');
+
+        if (window.matchMedia('(pointer: fine)').matches) {
+            dotCursorNode.style.display = 'block';
+        }
+
+        document.addEventListener('mousemove', (event) => {
+            dotCursorNode.style.left = `${event.clientX}px`;
+            dotCursorNode.style.top = `${event.clientY}px`;
+            
+            // Generate live vector plasma flame trails on layout motion vectors
+            if (window.matchMedia('(pointer: fine)').matches) {
+                generatePlasmaCursorFlame(event.clientX, event.clientY);
+            }
+        });
+
+        // Spawns tracking flares balanced to perfectly match the solid yellow dot core
+        function generatePlasmaCursorFlame(clientX, clientY) {
+            const flame = document.createElement('div');
+            flame.classList.add('cursor-flame-particle');
+            
+            // Proportional distribution sizing to match the solid yellow dot tracking focus
+            const sizeValue = Math.random() * 12 + 6; 
+            flame.style.width = `${sizeValue}px`;
+            flame.style.height = `${sizeValue}px`;
+            flame.style.left = `${clientX}px`;
+            flame.style.top = `${clientY}px`;
+            
+            // Adapt color metrics instantly if custom pointer is active inside target hovers
+            if (dotCursorNode.classList.contains('hovering')) {
+                // Focused cyan propulsion flare matching the interactive blue dot state
+                flame.style.background = 'radial-gradient(circle, #00F0FF 20%, rgba(157, 78, 221, 0.5) 65%, transparent 100%)';
+                flame.style.boxShadow = '0 0 10px rgba(0, 240, 255, 0.5)';
+            } else {
+                // Highly blended plasma fire flow trailing behind the solid yellow dot focus
+                flame.style.background = 'radial-gradient(circle, #FFEB3B 30%, #FF5722 70%, transparent 100%)';
+                flame.style.boxShadow = '0 0 10px rgba(255, 235, 59, 0.4)';
+            }
+            
+            document.body.appendChild(flame);
+            setTimeout(() => {
+                flame.remove();
+            }, 450);
+        }
+
+        // Manage active hover scaling mechanics dynamically across system click targets
+        function configureInteractiveHoverClasses() {
+            const targets = document.querySelectorAll('a, button, input, select, textarea, label, .ambient-white-glow-card');
+            targets.forEach(node => {
+                node.addEventListener('mouseenter', () => {
+                    dotCursorNode.classList.add('hovering');
+                });
+                node.addEventListener('mouseleave', () => {
+                    dotCursorNode.classList.remove('hovering');
+                });
+            });
+        }
+        configureInteractiveHoverClasses();
+
+        // Thanos Snap Style Directional Wind Dust Particle Dissolve Engine
+        let matrixSandAnimationFrame = null;
+        function triggerWindSnapDissolve() {
+            const canvas = document.getElementById('doodle-dissolve-canvas');
+            const ctx = canvas.getContext('2d');
+            const mainWrapper = document.getElementById('main-global-wrapper');
+            const logBox = document.getElementById('dissolve-countdown-log');
+            const triggerBtn = document.getElementById('dissolve-trigger-btn');
+            
+            triggerBtn.disabled = true;
+            logBox.classList.remove('hidden');
+            
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            mainWrapper.style.opacity = '0';
+            mainWrapper.style.transform = 'scale(0.96) translateX(40px)';
+            
+            let dustGrains = [];
+            const hexPalette = ['#00F0FF', '#FF007F', '#9D4EDD', '#E2E8F0', '#1A1C28', '#0D0E15'];
+            const clusterCap = 5000;
+            
+            for (let i = 0; i < clusterCap; i++) {
+                const originX = Math.random() * canvas.width;
+                const originY = Math.random() * canvas.height;
+                
+                dustGrains.push({
+                    x: originX,
+                    y: originY,
+                    windXVelocity: Math.random() * 5.5 + 3.0,
+                    windYVelocity: (Math.random() - 0.3) * 2.0,
+                    size: Math.random() * 2.5 + 1.0,
+                    color: hexPalette[Math.floor(Math.random() * hexPalette.length)],
+                    opacity: 1.0,
+                    activationDelay: (originX / canvas.width) * 1.5 + (originY / canvas.height) * 1.0
+                });
+            }
+            
+            let simulationStartTime = Date.now();
+            
+            function animationFrameStep() {
+                let secondsRunning = (Date.now() - simulationStartTime) / 1000;
+                let residualTime = Math.max(0, Math.ceil(9 - secondsRunning));
+                logBox.innerText = `[ WARNING: RECOMPILING MAIN INTERFACE LAYOUTS ... ${residualTime}s ]`;
+                
+                if (secondsRunning > 9.0) {
+                    cancelAnimationFrame(matrixSandAnimationFrame);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    mainWrapper.style.transform = 'scale(100%) translateX(0px)';
+                    mainWrapper.style.opacity = '1';
+                    logBox.classList.add('hidden');
+                    triggerBtn.disabled = false;
+                    return;
+                }
+                
+                ctx.fillStyle = 'rgba(6, 6, 10, 0.25)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                dustGrains.forEach(grain => {
+                    if (secondsRunning > grain.activationDelay) {
+                        grain.x += grain.windXVelocity;
+                        grain.y += grain.windYVelocity + Math.sin(grain.x / 30) * 0.5;
+                        grain.opacity -= 0.012;
+                        if (grain.opacity < 0) grain.opacity = 0;
+                    }
+                    
+                    if (grain.opacity > 0) {
+                        ctx.fillStyle = grain.color;
+                        ctx.globalAlpha = grain.opacity;
+                        ctx.fillRect(grain.x, grain.y, grain.size, grain.size);
+                    }
+                });
+                
+                matrixSandAnimationFrame = requestAnimationFrame(animationFrameStep);
+            }
+            
+            matrixSandAnimationFrame = requestAnimationFrame(animationFrameStep);
+        }
+
+        // Local Storage Clipboard Copy Engine
+        function copyTechHandle() {
+            const alertBox = document.getElementById('clip-alert');
+            
+            const dummyInput = document.createElement('input');
+            dummyInput.value = "@AmritKumar777";
+            document.body.appendChild(dummyInput);
+            dummyInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummyInput);
+            
+            alertBox.classList.remove('hidden');
+            setTimeout(() => {
+                alertBox.classList.add('hidden');
+            }, 3500);
+        }
+
+        // Live Feed Updates Form Processing Engine
+        function handleNewsletterSubscription(event) {
+            event.preventDefault();
+            const alertBox = document.getElementById('sub-success-alert');
+            alertBox.classList.remove('hidden');
+            
+            document.getElementById('sub-name').value = '';
+            document.getElementById('sub-email').value = '';
+            
+            setTimeout(() => {
+                alertBox.classList.add('hidden');
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
